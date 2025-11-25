@@ -4,14 +4,15 @@
   --font-luckiest: 'Luckiest Guy', cursive;
   --color-bg-light-pink: #fff0f0;
   --color-bg-teal: #0C95A2;
-  --bg-game-stage: url('src/assets/Desktop_JustDivide_Game_2.png');
-  --img-badge: url('src/assets/Levels and Score.png');
-  --tile-blue: url('src/assets/blue.png');
-  --tile-orange: url('src/assets/orange.png');
-  --tile-pink: url('src/assets/pink.png');
-  --tile-purple: url('src/assets/purple.png');
-  --tile-red: url('src/assets/red.png');
-  --placement-box: url('src/assets/Placement_Box.png');
+  /* Image URLs are set via JavaScript in main.jsx for proper Vite asset handling */
+  --bg-game-stage: '';
+  --img-badge: '';
+  --tile-blue: '';
+  --tile-orange: '';
+  --tile-pink: '';
+  --tile-purple: '';
+  --tile-red: '';
+  --placement-box: '';
   --max-width: 920px;
   --tile-size: clamp(44px, 9vw, 60px);
 }
