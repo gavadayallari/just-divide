@@ -1484,10 +1484,12 @@ html, body {
   }
 
   .stage {
+    width: 100%;
+    max-width: 830px;
     padding: 12px;
-    min-height: 750px;
-    margin: 2px auto;
-    margin-top: -90px;
+    min-height: 900px;
+    margin: 50px auto 50px auto;
+    margin-left: 30px;
   }
 
   .header {
@@ -1518,13 +1520,13 @@ html, body {
 
   .timer {
     font-size: 15px;
-    margin-bottom: -5px;
-    margin-top: -15px;
+    margin-bottom: 25px;
+    margin-top: 5px;
   }
 
   .instruction {
-    font-size: 16px;
-    margin-top: 4px;
+    font-size: 20px;
+    margin-top: 8px;
     word-spacing: 4px;
     margin-bottom: 15px;
   }
@@ -1554,11 +1556,11 @@ html, body {
 
   .cat-image {
     width: 400px;
-    top: -22px;
+    top: 8px;
   }
 
   .badges {
-    top: 50px;
+    top: 82px;
     width: 950px;
     gap: 12px;
     left: 50%;
@@ -1576,11 +1578,11 @@ html, body {
 
   .board {
     width: calc(var(--tile-size) * 4 + 20px + 30px);
-    height: calc(var(--tile-size) * 4 + 30px);
+    height: calc(var(--tile-size) * 4 + 80px);
     min-height: calc(var(--tile-size) * 4);
     padding: 2px 10px 2px;
     border-radius: 18px;
-    margin-top: -20px;
+    margin-top: 2px;
     margin-left: auto;
     margin-right: auto;
     pointer-events: auto;
@@ -1622,7 +1624,7 @@ html, body {
     flex-direction: row;
     gap: 24px;
     padding: 12px 18px;
-    margin-top: 35px;
+    margin-top: 50px;
     margin-right: 0;
     order: 2;
     border-radius: 20px;
@@ -1678,8 +1680,8 @@ html, body {
   }
 
   .queue-stack {
-    width: 80px;
-    min-height: 20px;
+    width: 10px;
+    min-height: 10px;
     padding: 6px;
     gap: 6px;
     border-width: 6px;
@@ -1789,7 +1791,7 @@ html, body {
 
   .stage {
     padding: 16px;
-    min-height: 750px;
+    min-height: 790px;
     margin: 0 auto;
   }
 
@@ -1850,7 +1852,7 @@ html, body {
 
   .cat-badges {
     height: 160px;
-    margin-bottom: -80px;
+    margin-bottom: -60px;
   }
 
   .cat-image {
@@ -1859,16 +1861,16 @@ html, body {
   }
 
   .badges {
-    top: 50px;
-    width: 950px;
-    gap: 12px;
-    left: 50%;
+    top: 63px;
+    width: 970px;
+    gap: 30px;
+    left: 51%;
     transform: translateX(-50%);
   }
 
   .badge {
     width: 210px;
-    height: 52px;
+    height: 72px;
   }
 
   .badge-text {
@@ -1877,9 +1879,10 @@ html, body {
 
   .board {
     width: calc(var(--tile-size) * 4 + 40px + 100px);
+    height: calc(var(--tile-size) * 4 + 60px + 100px);
     padding: 18px 16px 8px;
     border-radius: 18px;
-    margin-top: -10px;
+    margin-top: -35px;
     margin-left: auto;
     margin-right: auto;
     pointer-events: auto;
@@ -1913,11 +1916,11 @@ html, body {
 
   .right-panel {
     width: 400px;
-    height: 160px;
+    height: 150px;
     flex-direction: row;
     gap: 24px;
     padding: 12px 18px;
-    margin-top: 40px;
+    margin-top: 50px;
     margin-right: 0;
     order: 2;
     border-radius: 20px;
@@ -1973,7 +1976,7 @@ html, body {
 
   .queue-stack {
     width: 110px;
-    min-height: 60px;
+    min-height: 10px;
     padding: 6px;
     gap: 6px;
     border-width: 6px;
@@ -2041,8 +2044,9 @@ html, body {
     justify-content: center;
     margin: 0 auto;
     position: relative;
-    left: 0;
-    right: 0;
+    left: -60px;
+    right: -10px;
+    margin-top: -90px;
   }
 
   .modal-title {
@@ -2070,17 +2074,21 @@ html, body {
   }
 }
 
-/* iPad Air (820x1180) */
-@media screen and (min-width: 820px) and (max-width: 820px) and (min-height: 1180px) and (max-height: 1180px) {
+/* iPad Air (around 820x1180) */
+@media screen and (min-width: 810px) and (max-width: 830px) and (min-height: 1160px) and (max-height: 1200px) {
   .stage {
     padding: 18px;
-    min-height: 800px;
+    min-height: 100px;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
   }
 
   .content-row {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 20px;
+    justify-content: center;
+    gap: 24px;
   }
 
   .center-column {
@@ -2115,7 +2123,7 @@ html, body {
     flex-direction: row;
     gap: 12px;
     padding: 12px 16px;
-    margin-top: 10px;
+    margin-top: 40px;
     margin-right: 0;
     order: 2;
     border-radius: 20px;
@@ -2206,11 +2214,12 @@ html, body {
 
   .stage {
     padding: 8px;
-    min-height: 480px;
+    min-height: 800px;
     margin: 0 auto;
     max-width: 100%;
-    width: 200%;
-    margin-left: 5px;
+    width: 600px;
+    margin-left: 20px;
+    margin-top: 60px;
   }
 
   .header {
@@ -2605,11 +2614,13 @@ html, body {
 
   .stage {
     padding: 12px;
-    min-height: 100vh;
-    height: 100vh;
-    width: 100vw;
-    max-width: 100vw;
+    min-height: 95vh;
+    height: 95vh;
+    width: 100%;
+    max-width: 380px;
     margin: 0;
+    left: 0;
+    right: auto;
     border-radius: 0;
     position: relative;
   }
