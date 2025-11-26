@@ -2194,68 +2194,6 @@ html, body {
   }
 }
 
-/* Pixel 7 (412x915) */
-@media screen and (min-width: 412px) and (max-width: 412px) and (min-height: 915px) and (max-height: 915px) {
-  .stage {
-    padding: 12px;
-    min-height: 660px;
-  }
-
-  .content-row {
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .center-column {
-    max-width: 370px;
-    width: 100%;
-    order: 1;
-  }
-
-  .cat-image {
-    width: 370px;
-    top: -42px;
-  }
-
-  .badges {
-    top: 22px;
-    width: 480px;
-    gap: 10px;
-  }
-
-  .badge {
-    width: 175px;
-    height: 40px;
-  }
-
-  .badge-text {
-    font-size: 11px;
-  }
-
-  .right-panel {
-    width: 300px;
-    height: 100px;
-    flex-direction: row;
-    gap: 12px;
-    padding: 12px 16px;
-    margin-top: 10px;
-    margin-right: 0;
-    order: 2;
-    border-radius: 20px;
-    align-self: center;
-  }
-
-  .keep,
-  .trash {
-    flex-direction: column;
-  }
-
-  .queue-block {
-    order: -1;
-  }
-}
-
 /* Samsung Galaxy S8+ (360x740) */
 @media screen and (min-width: 360px) and (max-width: 360px) and (min-height: 740px) and (max-height: 740px) {
   :root {
@@ -2268,11 +2206,11 @@ html, body {
 
   .stage {
     padding: 8px;
-    min-height: 580px;
+    min-height: 480px;
     margin: 0 auto;
     max-width: 100%;
     width: 200%;
-    margin-left: 4px;
+    margin-left: 5px;
   }
 
   .header {
@@ -2551,6 +2489,113 @@ html, body {
   }
 }
 
+/* Samsung Galaxy A51/A71 (410-414px x 910-920px) - Separate unique query */
+@media screen and (min-width: 410px) and (max-width: 414px) and (min-height: 910px) and (max-height: 920px) {
+  .page {
+    padding: 0;
+    margin: 0;
+  }
+
+  .stage {
+    padding: 12px;
+    min-height: 870px;
+    margin: 0 auto;
+    margin-left: 35px;
+    max-width: 100%;
+    width: 100%;
+    border-radius: 0;
+    position: relative;
+    margin-top: 50px;
+  }
+
+  .content-row {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .center-column {
+    max-width: 370px;
+    width: 100%;
+    order: 1;
+    margin: 0 auto;
+  }
+
+  .cat-image {
+    width: 370px;
+    top: -27px;
+  }
+
+  .badges {
+    top: 50px;
+    width: 480px;
+    gap: 10px;
+  }
+
+  .badge {
+    width: 205px;
+    height: 50px;
+  }
+
+  .badge-text {
+    margin-top: -3px;
+    font-size: 13px;
+  }
+
+  .board {
+    width: calc(var(--tile-size) * 4 + 40px + 50px);
+    min-height: calc(var(--tile-size) * 4 + 120px);
+    padding: 18px 16px 10px;
+    border-radius: 18px;
+    margin-top: -10px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .grid {
+    grid-template-columns: repeat(4, var(--tile-size));
+    grid-template-rows: repeat(4, var(--tile-size));
+    gap: 17px;
+    margin-top: 20px;
+    margin-left: -5px;
+  }
+
+  .right-panel {
+    width: 330px;
+    height: 130px;
+    flex-direction: row;
+    gap: 12px;
+    padding: 12px 16px;
+    margin-top: 55px;
+    margin-right: 0;
+    margin-left: 0;
+    order: 2;
+    border-radius: 20px;
+    align-self: center;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .keep {
+    flex-direction: column;
+    order: 1;
+  }
+
+  .queue-block {
+    order: 2;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .trash {
+    flex-direction: column;
+    order: 3;
+  }
+}
+
 /* Samsung Galaxy S20 Ultra (412x915) */
 @media screen and (min-width: 412px) and (max-width: 412px) and (min-height: 915px) and (max-height: 915px) {
   .page {
@@ -2621,5 +2666,404 @@ html, body {
 
   .queue-block {
     order: -1;
+  }
+}
+
+/* Google Nest Hub (1024x600) */
+@media screen and (min-width: 1024px) and (max-width: 1024px) and (min-height: 600px) and (max-height: 600px) {
+  :root {
+    --tile-size: 60px;
+  }
+
+  .page {
+    padding: 16px;
+  }
+
+  .stage {
+    padding: 20px;
+    min-height: 480px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .header {
+    height: 50px;
+    margin-top: -8px;
+  }
+
+  .title {
+    font-size: 28px;
+    letter-spacing: 2px;
+  }
+
+  .pause,
+  .help {
+    width: 40px;
+    height: 40px;
+    top: 6px;
+    font-size: 18px;
+  }
+
+  .pause { left: 6px; }
+  .help { right: 6px; }
+
+  .subtitle {
+    margin: 8px 0;
+  }
+
+  .timer {
+    font-size: 16px;
+    margin-bottom: 4px;
+    margin-top: -10px;
+  }
+
+  .instruction {
+    font-size: 18px;
+    margin-top: 6px;
+    word-spacing: 4px;
+    margin-bottom: 10px;
+  }
+
+  .content-row {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 80px;
+    margin-top: 20px;
+    justify-content: center;
+  }
+
+  .center-column {
+    width: 320px;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cat-badges {
+    height: 180px;
+    margin-bottom: -130px;
+  }
+
+  .cat-image {
+    width: 450px;
+    top: -20px;
+  }
+
+  .badges {
+    top: 50px;
+    width: 520px;
+    gap: 2px;
+  }
+
+  .badge {
+    width: 250px;
+    height: 55px;
+  }
+
+  .badge-text {
+    margin-top: -3px;
+    font-size: 16px;
+  }
+
+  .board {
+    width: calc(var(--tile-size) * 4 + 16px + 24px);
+    height: calc(var(--tile-size) * 4 + 12px + 10px);
+    min-height: calc(var(--tile-size) * 4 + 40px + 40px);
+    padding: 8px 14px 6px;
+    border-radius: 18px;
+    margin-top: -1px;
+    max-width: 280px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(4, var(--tile-size));
+    grid-template-rows: repeat(4, var(--tile-size));
+    gap: 6px;
+    margin-top: 40px;
+  }
+
+  .cell {
+    width: var(--tile-size);
+    height: var(--tile-size);
+  }
+
+  .tile {
+    width: var(--tile-size);
+    height: var(--tile-size);
+    font-size: calc(var(--tile-size) * 0.35);
+  }
+
+  .right-panel {
+    width: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 4px;
+    margin-top: 50px;
+    margin-right: 0;
+  }
+
+  .keep-slot {
+    width: 59px;
+    height: 59px;
+  }
+
+  .keep-slot .tile {
+    width: 42px;
+    height: 42px;
+    font-size: 16px;
+  }
+
+  .keep-text {
+    font-size: 16px;
+    margin-top: 6px;
+  }
+
+  .queue-stack {
+    width: 180px;
+    padding: 6px;
+    gap: 6px;
+    min-height: 50px;
+  }
+
+  .queue-stack .tile {
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+  }
+
+  .trash-slot {
+    width: 55px;
+    height: 55px;
+  }
+
+  .trash-slot .tile {
+    width: 42px;
+    height: 42px;
+    font-size: 16px;
+  }
+
+  .trash-count {
+    font-size: 14px;
+    margin-top: 0px;
+  }
+}
+
+/* Samsung Galaxy Z Fold 5 (928x1080) - Unfolded Mode */
+@media screen and (min-width: 900px) and (max-width: 950px) and (min-height: 1000px) and (max-height: 1100px) {
+  :root {
+    --tile-size: 65px;
+  }
+
+  .page {
+    padding: 0;
+    margin: 0;
+  }
+
+  .stage {
+    padding: 12px;
+    min-height: 870px;
+    margin: 0 auto;
+    margin-left: 35px;
+    max-width: 100%;
+    width: 100%;
+    border-radius: 0;
+    position: relative;
+    margin-top: 50px;
+  }
+
+  .header {
+    height: 50px;
+    margin-top: -8px;
+  }
+
+  .title {
+    font-size: 24px;
+    letter-spacing: 2px;
+  }
+
+  .pause,
+  .help {
+    width: 36px;
+    height: 36px;
+    top: 6px;
+    font-size: 16px;
+  }
+
+  .pause { left: 6px; }
+  .help { right: 6px; }
+
+  .subtitle {
+    margin: 8px 0;
+  }
+
+  .timer {
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .instruction {
+    font-size: 16px;
+    margin-top: 6px;
+    word-spacing: 4px;
+  }
+
+  .content-row {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 20px;
+  }
+
+  .center-column {
+    max-width: 370px;
+    width: 100%;
+    order: 1;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cat-badges {
+    height: 160px;
+    margin-bottom: -120px;
+  }
+
+  .cat-image {
+    width: 370px;
+    top: -27px;
+  }
+
+  .badges {
+    top: 50px;
+    width: 480px;
+    gap: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .badge {
+    width: 205px;
+    height: 50px;
+  }
+
+  .badge-text {
+    margin-top: -3px;
+    font-size: 13px;
+  }
+
+  .board {
+    width: calc(var(--tile-size) * 4 + 40px + 50px);
+    min-height: calc(var(--tile-size) * 4 + 120px);
+    padding: 18px 16px 10px;
+    border-radius: 18px;
+    margin-top: -10px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .grid {
+    grid-template-columns: repeat(4, var(--tile-size));
+    grid-template-rows: repeat(4, var(--tile-size));
+    gap: 17px;
+    margin-top: 20px;
+    margin-left: -5px;
+  }
+
+  .cell {
+    width: var(--tile-size);
+    height: var(--tile-size);
+  }
+
+  .tile {
+    width: var(--tile-size);
+    height: var(--tile-size);
+    font-size: calc(var(--tile-size) * 0.35);
+  }
+
+  .right-panel {
+    width: 110px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px 6px;
+    margin-top: 60px;
+    margin-right: 0;
+    margin-left: 0;
+    order: 2;
+    border-radius: 20px;
+    align-self: flex-start;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .keep {
+    flex-direction: column;
+    order: 1;
+  }
+
+  .keep-slot {
+    width: 65px;
+    height: 65px;
+  }
+
+  .keep-slot .tile {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
+
+  .keep-text {
+    font-size: 16px;
+    margin-top: 6px;
+  }
+
+  .queue-block {
+    order: 2;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .queue-stack {
+    width: 180px;
+    padding: 6px;
+    gap: 6px;
+    min-height: 60px;
+  }
+
+  .queue-stack .tile {
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+  }
+
+  .trash {
+    flex-direction: column;
+    order: 3;
+  }
+
+  .trash-slot {
+    width: 65px;
+    height: 65px;
+  }
+
+  .trash-slot .tile {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
+
+  .trash-count {
+    font-size: 14px;
+    margin-top: 4px;
   }
 }
