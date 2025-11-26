@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 const SFX_FILES = {
-  bg: '/assets/sfx/bg-music.mp3',
   drop: '/assets/sfx/drop.wav',
   click: '/assets/sfx/click.wav',
   trash: '/assets/sfx/trash.wav',
@@ -30,7 +29,7 @@ export function AudioProvider({ children }) {
     } catch { return 0.8; }
   });
   const [musicEnabled, setMusicEnabled] = useState(() => {
-    try { return localStorage.getItem(MUSIC_ENABLED_KEY) !== 'false'; } catch { return true; }
+    try { return localStorage.getItem(MUSIC_ENABLED_KEY) === 'true'; } catch { return false; }
   });
 
   const [bgMusicPlaying, setBgMusicPlaying] = useState(false);
@@ -117,56 +116,7 @@ export function AudioProvider({ children }) {
     if (!SFX_FILES[key]) return;
 
     if (key === 'bg') {
-      if (!musicEnabled) return;
-      const audio = await loadBg();
-      if (!audio) return;
-
-      try {
-        if (opts.restart) {
-          audio.pause();
-          try { audio.currentTime = 0; } catch {}
-        }
-
-        audio.loop = true;
-
-        if (!gestureDone.current) {
-          try {
-            audio.muted = false;
-            audio.volume = muted ? 0 : (volume * 0.5);
-            const p = audio.play();
-            if (p !== undefined) {
-              await p.catch(() => {});
-              if (!audio.paused) {
-                gestureDone.current = true;
-                setBgMusicPlaying(true);
-                return;
-              }
-            }
-          } catch (_) {}
-
-          try {
-            audio.muted = true;
-            audio.volume = 0;
-            const q = audio.play();
-            if (q !== undefined) {
-              await q.catch(() => {});
-            }
-            bgAudioRef.current = audio;
-            setBgMusicPlaying(!audio.paused && !audio.muted);
-            return;
-          } catch (err) {
-            console.warn('muted autoplay failed', err);
-            return;
-          }
-        } else {
-          audio.muted = muted;
-          audio.volume = muted ? 0 : (volume * 0.5);
-          audio.play()?.catch(() => {});
-          setBgMusicPlaying(!audio.paused && !audio.muted);
-        }
-      } catch (err) {
-        console.warn('bg play error', err);
-      }
+      // Background music disabled
       return;
     }
 
@@ -174,22 +124,8 @@ export function AudioProvider({ children }) {
   }
 
   function ensureBackgroundPlays() {
-    if (gestureDone.current) return;
-    gestureDone.current = true;
-
-    const a = bgAudioRef.current || document.getElementById('bg-audio-fallback');
-    if (a) {
-      try {
-        a.muted = false;
-        a.volume = muted ? 0 : (volume * 0.5);
-        a.play?.().catch(() => {});
-        setBgMusicPlaying(!a.paused && !a.muted);
-      } catch (e) {
-        console.warn('ensureBackgroundPlays error', e);
-      }
-    } else {
-      playSound('bg', { restart: true });
-    }
+    // Background music disabled - do nothing
+    return;
   }
 
   function pauseBackgroundMusic() {
@@ -209,16 +145,8 @@ export function AudioProvider({ children }) {
   }
 
   async function forceStartBackgroundMusic() {
-    const audio = await loadBg();
-    if (!audio) return;
-    try {
-      audio.muted = false;
-      audio.volume = muted ? 0 : (volume * 0.5);
-      audio.loop = true;
-      audio.play?.().catch(() => {});
-      gestureDone.current = true;
-      setBgMusicPlaying(!audio.paused && !audio.muted);
-    } catch (e) { console.warn('forceStartBackgroundMusic error', e); }
+    // Background music disabled - do nothing
+    return;
   }
 
   useEffect(() => {

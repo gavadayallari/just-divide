@@ -2852,8 +2852,9 @@ html, body {
   }
 }
 
-/* Samsung Galaxy Z Fold 5 (928x1080) - Unfolded Mode */
-@media screen and (min-width: 900px) and (max-width: 950px) and (min-height: 1000px) and (max-height: 1100px) {
+/* Samsung Galaxy Z Fold 5 (portrait, unfolded-ish range) */
+/* Range thoda broad rakha hai taaki actual viewport px pe bhi apply ho */
+@media screen and (min-width: 820px) and (max-width: 1020px) and (min-height: 1000px) and (max-height: 1350px) and (orientation: portrait) {
   :root {
     --tile-size: 65px;
   }
@@ -2865,10 +2866,10 @@ html, body {
 
   .stage {
     padding: 12px;
-    min-height: 870px;
+    min-height: 970px;
     margin: 0 auto;
     margin-left: 35px;
-    max-width: 100%;
+    max-width: 200%;
     width: 100%;
     border-radius: 0;
     position: relative;
@@ -2913,17 +2914,19 @@ html, body {
 
   .content-row {
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: flex-start;
     justify-content: center;
-    gap: 40px;
+    gap: 24px;
     margin-top: 20px;
   }
 
   .center-column {
     max-width: 370px;
     width: 100%;
+    flex: 0 0 100%;
     order: 1;
-    margin: 0;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -2931,17 +2934,17 @@ html, body {
   }
 
   .cat-badges {
-    height: 160px;
-    margin-bottom: -120px;
+    height: 140px;
+    margin-bottom: -110px;
   }
 
   .cat-image {
     width: 370px;
-    top: -27px;
+    top: -47px;
   }
 
   .badges {
-    top: 50px;
+    top: 28px;
     width: 480px;
     gap: 10px;
     left: 50%;
@@ -2988,19 +2991,21 @@ html, body {
   }
 
   .right-panel {
-    width: 110px;
-    height: auto;
+    width: 100%;
+    max-width: 330px;
+    height: 130px;
+    flex: 0 0 100%;
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 10px 6px;
-    margin-top: 60px;
-    margin-right: 0;
-    margin-left: 0;
+    flex-direction: row;
+    gap: 16px;
+    padding: 12px 16px;
+    margin-top: 24px;
+    margin-right: auto;
+    margin-left: auto;
     order: 2;
     border-radius: 20px;
-    align-self: flex-start;
-    justify-content: flex-start;
+    align-self: center;
+    justify-content: space-between;
     align-items: center;
   }
 
@@ -3065,5 +3070,133 @@ html, body {
   .trash-count {
     font-size: 14px;
     margin-top: 4px;
+  }
+}
+
+/* Samsung Galaxy Z Fold 5 - portrait (around 344x882) */
+@media screen and (min-width: 330px) and (max-width: 380px) and (min-height: 840px) and (max-height: 950px) and (orientation: portrait) {
+  .content-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 20px;
+  }
+
+  .center-column {
+    max-width: 370px;
+    width: 100%;
+    flex: 0 0 100%;
+    order: 1;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .instruction {
+    font-size: 17px;
+    margin-top: 6px;
+    word-spacing: 4px;
+  }
+
+  .cat-badges {
+    height: 140px;
+    margin-bottom: -110px;
+  }
+
+  .cat-image {
+    width: 370px;
+    top: -27px;
+  }
+
+  .badges {
+    top: 28px;
+    width: 480px;
+    gap: 2px;
+    left: 52%;
+    transform: translateX(-50%);
+  }
+
+  .badge {
+    width: 180px;
+    height: 60px;
+  }
+
+  .badge-text {
+    margin-top: -3px;
+    font-size: 13px;
+  }
+
+  .board {
+    width: calc(var(--tile-size) * 4 + 40px + 50px);
+    min-height: calc(var(--tile-size) * 4 + 120px);
+    padding: 18px 16px 10px;
+    border-radius: 18px;
+    margin-top: -2px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .right-panel {
+    width: 105%;
+    max-width: 380px;
+    height: 130px;
+    flex: 0 0 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    margin-right: auto;
+    margin-left: auto;
+    order: 2;
+    border-radius: 20px;
+    align-self: center;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .queue-block {
+    order: 2;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin: 0 auto;
+    margin-left: -74px;
+  }
+
+  .queue-stack {
+    display: flex;
+    width: 80px;
+    padding: 4px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .queue-stack .tile {
+    width: 45px;
+    height: 45px;
+    font-size: 16px;
+  }
+
+  .keep-slot{
+    margin-left: -10px;
+  }
+
+  .trash {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    order: 3;
+    margin-left: -70px;
   }
 }
