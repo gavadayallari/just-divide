@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 const SFX_FILES = {
-  drop: '/assets/sfx/draganddrop.mp3',
-  // click: '/assets/sfx/click.wav',
-  // trash: '/assets/sfx/trash.wav',
-  // gameover: '/assets/sfx/gameover.wav',
+  drop: '/assets/sfx/drop.wav',
+  click: '/assets/sfx/click.wav',
+  trash: '/assets/sfx/trash.wav',
+  gameover: '/assets/sfx/gameover.wav',
 };
 
 const SAVE_KEY = 'jd_bg_time_v1';

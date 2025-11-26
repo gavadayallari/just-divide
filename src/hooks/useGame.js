@@ -1,9 +1,62 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAudio } from '../contexts/AudioManager';
 
-const TILE_POOL = [2,3,4,5,6,7,8,9,10,12,15,16,18,20,24,25,27,30,32,35];
-const LEVEL_THRESHOLD = 100;
-const GAME_DURATION_SECONDS = 10 * 60;
+// Number ranges per level:
+// - Level 1:  2 - 10
+// - Level 2:  2 - 20
+// - Level 3:  2 - 30
+// - Level 4:  2 - 40
+// - Level 5:  2 - 50
+//   (and so on: always 2 - (level * 10) from level 3+)
+// Level & score rules + time limit (total game time is 10 minutes):
+// Time checkpoints (game over if score too low):
+// -  3 minutes  -> need 150+ score, becomes at least level 2, otherwise game over
+// -  5 minutes  -> need 300+ score, becomes at least level 3, otherwise game over
+// -  7 minutes  -> need 450+ score, becomes at least level 4, otherwise game over
+// -  8 minutes  -> need 550+ score, becomes at least level 5, otherwise game over
+// -  9 minutes  -> need 650+ score, becomes at least level 6, otherwise game over
+// - 10 minutes  -> need 750+ score, becomes at least level 7, otherwise game over
+// Score thresholds (instant level up when score reaches these values):
+// - 150+ -> level 2
+// - 300+ -> level 3
+// - 450+ -> level 4
+// - 550+ -> level 5
+// - 650+ -> level 6
+// - 750+ -> level 7
+const GAME_DURATION_SECONDS = 10 * 60; // 10 minutes
+
+const LEVEL_CHECKPOINTS = [
+  { time: 3 * 60, minScore: 150, minLevel: 2 },
+  { time: 5 * 60, minScore: 300, minLevel: 3 },
+  { time: 7 * 60, minScore: 450, minLevel: 4 },
+  { time: 8 * 60, minScore: 550, minLevel: 5 },
+  { time: 9 * 60, minScore: 650, minLevel: 6 },
+  { time: 10 * 60, minScore: 750, minLevel: 7 },
+];
+
+const SCORE_LEVELS = [
+  { minScore: 150, level: 2 },
+  { minScore: 300, level: 3 },
+  { minScore: 450, level: 4 },
+  { minScore: 550, level: 5 },
+  { minScore: 650, level: 6 },
+  { minScore: 750, level: 7 },
+];
+
+function getRangeForLevel(level) {
+  const start = 2;
+  // Level 1: 2-10, Level 2: 2-20, Level 3+: 2-(level*10)
+  const end =
+    level === 1 ? 10 :
+    level === 2 ? 20 :
+    level * 10;
+  return { start, end };
+}
+
+function randomTileForLevel(level) {
+  const { start, end } = getRangeForLevel(level);
+  return Math.floor(Math.random() * (end - start + 1)) + start;
+}
 
 function deepCopyState(state) { return JSON.parse(JSON.stringify(state)); }
 
@@ -36,7 +89,12 @@ export default function useGame() {
   const { playSound, pauseBackgroundMusic, resumeBackgroundMusic } = useAudio();
 
   const [grid, setGrid] = useState(Array(16).fill(0));
-  const [queue, setQueue] = useState([randomTile(), randomTile(), randomTile()]);
+  // Level-based random tiles: level 1 & 2 use 2-20, level 3+ expand up to 2-(level*10)
+  const [queue, setQueue] = useState([
+    randomTileForLevel(1),
+    randomTileForLevel(1),
+    randomTileForLevel(1),
+  ]);
   const [keepValue, setKeepValue] = useState(0);
   const [trashCount, setTrashCount] = useState(10);
   const [score, setScore] = useState(0);
@@ -69,15 +127,35 @@ export default function useGame() {
       if (!isPaused) {
         const secs = Math.floor((Date.now() - startedAtRef.current) / 1000);
         setElapsed(secs);
-        if (secs >= GAME_DURATION_SECONDS && !gameOver) {
-          endGame('time');
+        if (!gameOver) {
+          // Checkpoint-based rules:
+          // If we've passed a checkpoint time but don't have enough score, game over.
+          // Otherwise, enforce minimum level according to highest checkpoint reached.
+          let requiredLevel = 1;
+          for (const cp of LEVEL_CHECKPOINTS) {
+            if (secs >= cp.time) {
+              if (score < cp.minScore) {
+                endGame('time');
+                return;
+              }
+              requiredLevel = cp.minLevel;
+            }
+          }
+
+          setLevel(curr => Math.max(curr, requiredLevel));
+
+          // Hard limit: after 10 minutes, always end the game.
+          if (secs >= GAME_DURATION_SECONDS) {
+            endGame('time');
+            return;
+          }
         }
       }
     };
     tick();
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, [isPaused, gameOver]);
+  }, [isPaused, gameOver, level, score]);
 
   const formattedTime = (() => {
     const s = elapsed;
@@ -125,7 +203,12 @@ export default function useGame() {
     playSound('click');
     pushUndo();
     setGrid(Array(16).fill(0));
-    setQueue([randomTile(), randomTile(), randomTile()]);
+    // Restart at level 1 range (1-10)
+    setQueue([
+      randomTileForLevel(1),
+      randomTileForLevel(1),
+      randomTileForLevel(1),
+    ]);
     setKeepValue(0);
     setTrashCount(10);
     setScore(0);
@@ -168,18 +251,18 @@ export default function useGame() {
       if (!val || val === 0) continue;
 
       const neighbors = getNeighbors(idx);
-      let merged = false;
 
       for (const n of neighbors) {
         const nv = g[n];
         if (!nv || nv === 0) continue;
 
         if (nv === val) {
+          // Same-value merge: +5 score
           totalScoreGain += 5;
           g[idx] = 0; g[n] = 0;
           toInspect.push(...getNeighbors(idx), ...getNeighbors(n));
-          merged = true;
-          break;
+          // Do NOT break; allow this value to interact with all sides
+          continue;
         }
 
         const larger = Math.max(val, nv), smaller = Math.min(val, nv);
@@ -188,19 +271,18 @@ export default function useGame() {
           const largerIdx = val === larger ? idx : n;
           const smallerIdx = val === smaller ? idx : n;
 
-          totalScoreGain += 10;
+          // Division merge: also +5 score (same as equal merge)
+          totalScoreGain += 5;
 
           if (result === 1) g[largerIdx] = 0;
           else g[largerIdx] = result;
 
           g[smallerIdx] = 0;
           toInspect.push(...getNeighbors(largerIdx), ...getNeighbors(smallerIdx));
-          merged = true;
-          break;
+          // Do NOT break; allow division with all valid neighbors around this value
+          continue;
         }
       }
-
-      if (merged) continue;
     }
 
     return { newGrid: g, gained: totalScoreGain };
@@ -210,7 +292,7 @@ export default function useGame() {
     if (source === 'queue') {
       setQueue(prev => {
         const next = prev.slice(1);
-        next.push(randomTile());
+        next.push(randomTileForLevel(level));
         return next;
       });
     } else if (source === 'keep') {
@@ -245,12 +327,20 @@ export default function useGame() {
 
     setScore(prev => {
       const ns = prev + gained;
-      const newLevel = Math.floor(ns / LEVEL_THRESHOLD) + 1;
-      if (newLevel > level) setLevel(newLevel);
       setBestScore(bs => {
         const updated = Math.max(bs, ns);
         try { localStorage.setItem('jd_best', String(updated)); } catch {}
         return updated;
+      });
+      // Instant level up based purely on score thresholds
+      setLevel(curr => {
+        let target = curr;
+        for (const sl of SCORE_LEVELS) {
+          if (ns >= sl.minScore) {
+            target = Math.max(target, sl.level);
+          }
+        }
+        return target;
       });
       return ns;
     });
@@ -277,7 +367,7 @@ export default function useGame() {
     pushUndo();
     setQueue(prev => {
       const next = prev.slice(1);
-      next.push(randomTile());
+      next.push(randomTileForLevel(level));
       return next;
     });
     setKeepValue(value);
@@ -309,8 +399,6 @@ export default function useGame() {
 
     setScore(prev => {
       const ns = Math.max(0, prev - 10);
-      const newLevel = Math.floor(ns / LEVEL_THRESHOLD) + 1;
-      if (newLevel !== level) setLevel(newLevel);
       setBestScore(bs => {
         const updated = Math.max(bs, ns);
         try { localStorage.setItem('jd_best', String(updated)); } catch {}
@@ -375,13 +463,11 @@ export default function useGame() {
     setTrashCount(prev => Math.max(0, prev - 1));
     setQueue(prev => {
       const next = prev.slice(1);
-      next.push(randomTile());
+      next.push(randomTileForLevel(level));
       return next;
     });
     setScore(prev => {
       const ns = Math.max(0, prev - 10);
-      const newLevel = Math.floor(ns / LEVEL_THRESHOLD) + 1;
-      if (newLevel !== level) setLevel(newLevel);
       setBestScore(bs => {
         const updated = Math.max(bs, ns);
         try { localStorage.setItem('jd_best', String(updated)); } catch {}
@@ -425,3 +511,4 @@ export default function useGame() {
 
   return api;
 }
+

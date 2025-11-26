@@ -158,8 +158,9 @@ html, body {
 
 .badge-text {
   color: white;
-  font-weight: 900;
-  font-size: 18px;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap; 
 }
 
 .board {
@@ -336,7 +337,7 @@ html, body {
 }
 
 .trash-icon { font-size: 14px; color: #fff; }
-.trash-count { font-weight: 900; font-size: 14px; color: #fff; }
+.trash-count { font-weight: 900; font-size: 14px; color: #fff; white-space: nowrap; }
 
 .fullscreen-hint {
   position: absolute;
