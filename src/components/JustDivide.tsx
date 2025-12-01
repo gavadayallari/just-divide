@@ -1,18 +1,44 @@
-// src/components/JustDivide.jsx
 import React from 'react';
 import Grid from './Grid';
 import RightPanel from './RightPanel';
 import GameModal from './GameModal';
 import useGame from '../hooks/useGame';
 import { useAudio } from '../contexts/AudioManager';
-import catImage from '../assets/Cat.png'; // optional
 
-// decorative image you uploaded (local path)
-const RIGHT_PANEL_DECOR = '/mnt/data/7b923722-0e59-4037-ab0e-9a9f5f9b7575.png';
+const catImage = '/images/Cat.png'; // optional
+
+interface AudioAPI {
+  ensureBackgroundPlays?: () => void;
+}
+
+interface GameAPI {
+  startBackgroundMusic?: () => void;
+  isPaused: boolean;
+  resume: () => void;
+  pause: () => void;
+  formattedTime: string;
+  level: number;
+  score: number;
+  grid: number[];
+  queue: number[];
+  keepValue: number;
+  trashCount: number;
+  gameOver: boolean;
+  bestScore: number;
+  restart: () => void;
+  onCellDrop: (index: number, payload?: { value: number; source: string }) => Promise<void> | void;
+  startPointerDrag: (e: React.PointerEvent, value: number, source: string) => void;
+  handleDragStartFallback: (e: React.DragEvent, value: number, source: string) => void;
+  onKeepClick: () => void;
+  onKeepPointerDown: (e: React.PointerEvent, value: number, source: string) => void;
+  onKeepDragStart: (e: React.DragEvent, value: number, source: string) => void;
+  handleKeepDrop: (value: number, source: string) => boolean;
+  handleTrashDrop: (value: number, source: string) => boolean;
+}
 
 export default function JustDivide() {
-  const api = useGame();
-  const audio = useAudio();
+  const api = useGame() as GameAPI;
+  const audio = useAudio() as AudioAPI | null;
 
   const ensureAudio = () => {
     if (audio && typeof audio.ensureBackgroundPlays === 'function') {
@@ -104,3 +130,4 @@ export default function JustDivide() {
     </div>
   );
 }
+

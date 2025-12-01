@@ -1,7 +1,6 @@
-// src/components/Tile.jsx
 import React from 'react';
 
-function tileColorClass(value) {
+function tileColorClass(value: number): string {
   if (value <= 3) return "blue";
   if (value <= 5) return "orange";
   if (value <= 7) return "pink";
@@ -9,16 +8,20 @@ function tileColorClass(value) {
   return "red";
 }
 
-export default function Tile({ value, onPointerDown, onDragStart, draggable = true }) {
-  // only include handlers and draggable attribute when provided
-  const props = {};
+interface TileProps {
+  value: number;
+  onPointerDown?: (e: React.PointerEvent<HTMLDivElement>) => void;
+  onDragStart?: (e: React.DragEvent<HTMLDivElement>) => void;
+  draggable?: boolean;
+}
+
+export default function Tile({ value, onPointerDown, onDragStart, draggable = true }: TileProps) {
+  const props: React.HTMLAttributes<HTMLDivElement> = {};
   if (typeof onPointerDown === 'function') props.onPointerDown = onPointerDown;
   if (typeof onDragStart === 'function') props.onDragStart = onDragStart;
-  // set draggable attribute explicitly (boolean)
   props.draggable = draggable;
 
-  // also prevent touch scrolling while dragging when draggable
-  const style = {};
+  const style: React.CSSProperties = {};
   if (draggable) style.touchAction = 'none';
 
   return (
@@ -32,3 +35,4 @@ export default function Tile({ value, onPointerDown, onDragStart, draggable = tr
     </div>
   );
 }
+

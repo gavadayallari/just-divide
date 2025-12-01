@@ -1,8 +1,11 @@
-// src/components/MusicStarter.jsx
 import React, { useEffect, useState } from 'react';
 import { useAudio } from '../contexts/AudioManager';
 
-export default function MusicStarter({ autoShow = true }) {
+interface MusicStarterProps {
+  autoShow?: boolean;
+}
+
+export default function MusicStarter({ autoShow = true }: MusicStarterProps) {
   const audio = useAudio();
   const [visible, setVisible] = useState(autoShow);
   const [loading, setLoading] = useState(false);
@@ -12,7 +15,7 @@ export default function MusicStarter({ autoShow = true }) {
     if (audio?.bgMusicPlaying) setVisible(false);
   }, [audio]);
 
-  async function handleStart(e) {
+  async function handleStart(e?: React.MouseEvent) {
     e?.stopPropagation?.();
     if (!audio) return;
     setLoading(true);

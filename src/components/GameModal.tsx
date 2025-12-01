@@ -1,6 +1,13 @@
 import React from 'react';
 
-export default function GameModal({ open, score, bestScore, onRestart }) {
+interface GameModalProps {
+  open: boolean;
+  score: number;
+  bestScore: number;
+  onRestart: () => void;
+}
+
+export default function GameModal({ open, score, bestScore, onRestart }: GameModalProps) {
   if (!open) return null;
   return (
     <div className="modal">
@@ -20,3 +27,4 @@ export default function GameModal({ open, score, bestScore, onRestart }) {
     </div>
   );
 }
+

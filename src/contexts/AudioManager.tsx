@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 
-const SFX_FILES = {
+const SFX_FILES: Record<string, string> = {
   drop: '/assets/sfx/drop.wav',
   click: '/assets/sfx/click.wav',
   trash: '/assets/sfx/trash.wav',
@@ -12,11 +12,31 @@ const MUTED_KEY = 'jd_muted';
 const VOLUME_KEY = 'jd_volume';
 const MUSIC_ENABLED_KEY = 'jd_music_enabled';
 
-const AudioContextApp = createContext(null);
+interface AudioAPI {
+  playSound: (key: string, opts?: { restart?: boolean }) => Promise<void> | void;
+  ensureBackgroundPlays: () => void;
+  pauseBackgroundMusic: () => void;
+  resumeBackgroundMusic: () => void;
+  muted: boolean;
+  toggleMute: () => void;
+  setVolume: (v: number) => void;
+  volume: number;
+  musicEnabled: boolean;
+  toggleMusicEnabled: () => void;
+  bgMusicPlaying: boolean;
+  forceStartBackgroundMusic: () => Promise<void> | void;
+  _getSavedTime: () => number;
+}
 
-export function AudioProvider({ children }) {
-  const bgAudioRef = useRef(null);
-  const loadPromises = useRef({});
+const AudioContextApp = createContext<AudioAPI | null>(null);
+
+interface AudioProviderProps {
+  children: React.ReactNode;
+}
+
+export function AudioProvider({ children }: AudioProviderProps) {
+  const bgAudioRef = useRef<HTMLAudioElement | null>(null);
+  const loadPromises = useRef<{ bg?: Promise<HTMLAudioElement | null> }>({});
   const gestureDone = useRef(false);
 
   const [muted, setMuted] = useState(() => {
@@ -38,7 +58,7 @@ export function AudioProvider({ children }) {
   useEffect(() => { try { localStorage.setItem(VOLUME_KEY, String(volume)); } catch {} }, [volume]);
   useEffect(() => { try { localStorage.setItem(MUSIC_ENABLED_KEY, musicEnabled ? 'true' : 'false'); } catch {} }, [musicEnabled]);
 
-  function restorePositionIfAny(audio) {
+  function restorePositionIfAny(audio: HTMLAudioElement) {
     try {
       const raw = localStorage.getItem(SAVE_KEY);
       if (!raw) return;
@@ -50,55 +70,14 @@ export function AudioProvider({ children }) {
   }
 
   function loadBg() {
+    // Background music disabled - return null
     if (loadPromises.current.bg) return loadPromises.current.bg;
 
-    loadPromises.current.bg = new Promise((resolve) => {
-      try {
-        const a = new Audio();
-        a.src = SFX_FILES.bg;
-        a.preload = 'auto';
-
-        try { a.muted = true; } catch (e) {}
-        try { a.volume = 0; } catch (e) {}
-
-        const onCan = () => {
-          a.removeEventListener('canplaythrough', onCan);
-          bgAudioRef.current = a;
-          restorePositionIfAny(a);
-          resolve(a);
-        };
-        const onErr = () => {
-          a.removeEventListener('error', onErr);
-          console.warn('Failed to load bg audio', SFX_FILES.bg);
-          bgAudioRef.current = a;
-          restorePositionIfAny(a);
-          resolve(a);
-        };
-
-        a.addEventListener('canplaythrough', onCan);
-        a.addEventListener('error', onErr);
-
-        setTimeout(() => {
-          if (!bgAudioRef.current) {
-            bgAudioRef.current = a;
-            restorePositionIfAny(a);
-            resolve(a);
-          }
-        }, 1800);
-
-        try { a.load(); } catch (err) {}
-
-        try { a.play()?.catch(() => {}); } catch (e) {}
-      } catch (err) {
-        console.warn('loadBg err', err);
-        resolve(null);
-      }
-    });
-
+    loadPromises.current.bg = Promise.resolve(null);
     return loadPromises.current.bg;
   }
 
-  function playSfxOnce(path, vol = 0.9) {
+  function playSfxOnce(path: string, vol: number = 0.9) {
     try {
       if (muted) return;
       const a = new Audio(path);
@@ -108,7 +87,7 @@ export function AudioProvider({ children }) {
     } catch (err) { console.warn('playSfxOnce error', err); }
   }
 
-  async function playSound(key, opts = {}) {
+  async function playSound(key: string, opts: { restart?: boolean } = {}) {
     if (muted) {
       // still allow limited SFX? we return to respect mute
       return;

@@ -4,7 +4,7 @@
   --font-luckiest: 'Luckiest Guy', cursive;
   --color-bg-light-pink: #fff0f0;
   --color-bg-teal: #0C95A2;
-  /* Image URLs are set via JavaScript in main.jsx for proper Vite asset handling */
+
   --bg-game-stage: '';
   --img-badge: '';
   --tile-blue: '';

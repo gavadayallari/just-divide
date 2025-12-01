@@ -1,9 +1,21 @@
-// src/components/Grid.jsx
 import React from 'react';
 import Tile from './Tile';
-import placementBox from '../assets/Placement_Box.png';
 
-export default function Grid({ grid, onCellDrop, onTilePointerDown, onTileDragStart }) {
+const placementBox = '/images/Placement_Box.png';
+
+interface DropPayload {
+  value: number;
+  source: string;
+}
+
+interface GridProps {
+  grid: number[];
+  onCellDrop: (index: number, payload?: DropPayload) => Promise<void> | void;
+  onTilePointerDown?: (e: React.PointerEvent, value: number, source: string) => void;
+  onTileDragStart?: (e: React.DragEvent, value: number, source: string) => void;
+}
+
+export default function Grid({ grid, onCellDrop, onTilePointerDown, onTileDragStart }: GridProps) {
   return (
     <div
       className="grid"
@@ -25,12 +37,13 @@ export default function Grid({ grid, onCellDrop, onTilePointerDown, onTileDragSt
             ev.preventDefault();
             ev.currentTarget.classList.remove('drag-over-cell');
 
-            // Try structured payload first, then fallback, then call onCellDrop(i)
-            let payload = null;
+            let payload: DropPayload | null = null;
             try {
               const rawJson = ev.dataTransfer?.getData && ev.dataTransfer.getData('application/json');
               if (rawJson) payload = JSON.parse(rawJson);
-            } catch (err) { payload = null; }
+            } catch (err) { 
+              payload = null; 
+            }
 
             if (!payload) {
               try {
@@ -39,7 +52,9 @@ export default function Grid({ grid, onCellDrop, onTilePointerDown, onTileDragSt
                   const n = parseInt(rawText, 10);
                   if (!Number.isNaN(n)) payload = { value: n, source: 'queue' };
                 }
-              } catch (err) { payload = null; }
+              } catch (err) { 
+                payload = null; 
+              }
             }
 
             if (payload && typeof onCellDrop === 'function') {
@@ -59,8 +74,6 @@ export default function Grid({ grid, onCellDrop, onTilePointerDown, onTileDragSt
           }}
         >
           {v !== 0 && (
-            // IMPORTANT: For tiles already on the grid we do NOT pass pointer/drag handlers
-            // and set draggable={false} so they can't be picked up again accidentally.
             <Tile
               value={v}
               draggable={false}
@@ -71,3 +84,4 @@ export default function Grid({ grid, onCellDrop, onTilePointerDown, onTileDragSt
     </div>
   );
 }
+

@@ -1,6 +1,31 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAudio } from '../contexts/AudioManager';
 
+interface LevelCheckpoint {
+  time: number;
+  minScore: number;
+  minLevel: number;
+}
+
+interface ScoreLevel {
+  minScore: number;
+  level: number;
+}
+
+interface GameState {
+  grid: number[];
+  queue: number[];
+  keepValue: number;
+  trashCount: number;
+  score: number;
+  level: number;
+}
+
+interface DragState {
+  value: number;
+  source: string | null;
+}
+
 // Number ranges per level:
 // - Level 1:  2 - 10
 // - Level 2:  2 - 20
@@ -25,7 +50,7 @@ import { useAudio } from '../contexts/AudioManager';
 // - 750+ -> level 7
 const GAME_DURATION_SECONDS = 10 * 60; // 10 minutes
 
-const LEVEL_CHECKPOINTS = [
+const LEVEL_CHECKPOINTS: LevelCheckpoint[] = [
   { time: 3 * 60, minScore: 150, minLevel: 2 },
   { time: 5 * 60, minScore: 300, minLevel: 3 },
   { time: 7 * 60, minScore: 450, minLevel: 4 },
@@ -34,7 +59,7 @@ const LEVEL_CHECKPOINTS = [
   { time: 10 * 60, minScore: 750, minLevel: 7 },
 ];
 
-const SCORE_LEVELS = [
+const SCORE_LEVELS: ScoreLevel[] = [
   { minScore: 150, level: 2 },
   { minScore: 300, level: 3 },
   { minScore: 450, level: 4 },
@@ -43,7 +68,7 @@ const SCORE_LEVELS = [
   { minScore: 750, level: 7 },
 ];
 
-function getRangeForLevel(level) {
+function getRangeForLevel(level: number): { start: number; end: number } {
   const start = 2;
   // Level 1: 2-10, Level 2: 2-20, Level 3+: 2-(level*10)
   const end =
@@ -53,14 +78,14 @@ function getRangeForLevel(level) {
   return { start, end };
 }
 
-function randomTileForLevel(level) {
+function randomTileForLevel(level: number): number {
   const { start, end } = getRangeForLevel(level);
   return Math.floor(Math.random() * (end - start + 1)) + start;
 }
 
-function deepCopyState(state) { return JSON.parse(JSON.stringify(state)); }
+function deepCopyState<T>(state: T): T { return JSON.parse(JSON.stringify(state)); }
 
-function getNeighbors(idx) {
+function getNeighbors(idx: number): number[] {
   const row = Math.floor(idx / 4), col = idx % 4;
   const neighbors = [];
   if (row > 0) neighbors.push(idx - 4);
@@ -70,7 +95,7 @@ function getNeighbors(idx) {
   return neighbors;
 }
 
-function anyValidMerge(grid) {
+function anyValidMerge(grid: number[]): boolean {
   for (let i = 0; i < 16; i++) {
     const v = grid[i]; if (v === 0) continue;
     for (const n of getNeighbors(i)) {
@@ -83,7 +108,7 @@ function anyValidMerge(grid) {
   return false;
 }
 
-function randomTile() { return TILE_POOL[Math.floor(Math.random()*TILE_POOL.length)]; }
+// Removed unused randomTile function that referenced undefined TILE_POOL
 
 export default function useGame() {
   const { playSound, pauseBackgroundMusic, resumeBackgroundMusic } = useAudio();
@@ -103,14 +128,14 @@ export default function useGame() {
   });
   const [level, setLevel] = useState(1);
   const [gameOver, setGameOver] = useState(false);
-  const [undoStack, setUndoStack] = useState([]);
+  const [undoStack, setUndoStack] = useState<GameState[]>([]);
   const [elapsed, setElapsed] = useState(0);
 
   const [isPaused, setIsPaused] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
   const startedAtRef = useRef(Date.now());
-  const draggingRef = useRef({ value: 0, source: null });
+  const draggingRef = useRef<DragState>({ value: 0, source: null });
   const bgMusicStartedRef = useRef(false);
 
   useEffect(() => {
@@ -171,7 +196,7 @@ export default function useGame() {
     });
   }
 
-  function checkGameOverAndSet(g) {
+  function checkGameOverAndSet(g: number[]) {
     const isFull = g.every(v => v !== 0);
     const possible = anyValidMerge(g);
     if (isFull && !possible) {
@@ -239,7 +264,7 @@ export default function useGame() {
     });
   }
 
-  function runMergesAfterPlacement(stateGrid, placedIdx, placedValue) {
+  function runMergesAfterPlacement(stateGrid: number[], placedIdx: number, placedValue: number): { newGrid: number[]; gained: number } {
     const g = stateGrid.slice();
     g[placedIdx] = placedValue;
     const toInspect = [placedIdx];
@@ -288,7 +313,7 @@ export default function useGame() {
     return { newGrid: g, gained: totalScoreGain };
   }
 
-  function consumeDraggedSource(source) {
+  function consumeDraggedSource(source: string | null) {
     if (source === 'queue') {
       setQueue(prev => {
         const next = prev.slice(1);
@@ -300,7 +325,7 @@ export default function useGame() {
     }
   }
 
-  async function onCellDrop(index, { value = null, source = null } = {}) {
+  async function onCellDrop(index: number, { value = null, source = null }: { value?: number | null; source?: string | null } = {}) {
     if (isPaused) return;
     if (gameOver) return;
     if (grid[index] !== 0) return;
@@ -352,7 +377,7 @@ export default function useGame() {
     setTimeout(() => checkGameOverAndSet(newGrid), 0);
   }
 
-  function handleKeepDrop(value, source) {
+  function handleKeepDrop(value: number, source: string): boolean {
     if (isPaused) return false;
     if (gameOver) return false;
     if (source !== 'queue') return false;
@@ -376,7 +401,7 @@ export default function useGame() {
     return true;
   }
 
-  function handleTrashDrop(value, source) {
+  function handleTrashDrop(value: number, source: string): boolean {
     if (isPaused) return false;
     if (gameOver) return false;
     if (typeof trashCount !== 'number' || trashCount <= 0) return false;
@@ -412,7 +437,7 @@ export default function useGame() {
     return true;
   }
 
-  function startPointerDrag(e, value, source) {
+  function startPointerDrag(e: React.PointerEvent, value: number, source: string) {
     if (isPaused) {
       setToastMessage('Resume to move tiles');
       setTimeout(() => setToastMessage(''), 1000);
@@ -428,7 +453,7 @@ export default function useGame() {
     try { e.dataTransfer?.setData('text/plain', String(value)); } catch {}
   }
 
-  function handleDragStartFallback(e, value, source) {
+  function handleDragStartFallback(e: React.DragEvent, value: number, source: string) {
     if (isPaused) {
       e.preventDefault?.();
       setToastMessage('Resume to move tiles');
@@ -445,10 +470,10 @@ export default function useGame() {
     try { e.dataTransfer?.setData('text/plain', String(value)); } catch {}
   }
 
-  function onQueuePointerDown(e, value, source) { startPointerDrag(e, value, source); }
-  function onQueueDragStart(e, value, source) { handleDragStartFallback(e, value, source); }
-  function onKeepPointerDown(e, value, source) { startPointerDrag(e, value, source); }
-  function onKeepDragStart(e, value, source) { handleDragStartFallback(e, value, source); }
+  function onQueuePointerDown(e: React.PointerEvent, value: number, source: string) { startPointerDrag(e, value, source); }
+  function onQueueDragStart(e: React.DragEvent, value: number, source: string) { handleDragStartFallback(e, value, source); }
+  function onKeepPointerDown(e: React.PointerEvent, value: number, source: string) { startPointerDrag(e, value, source); }
+  function onKeepDragStart(e: React.DragEvent, value: number, source: string) { handleDragStartFallback(e, value, source); }
 
   function useTrash() {
     if (isPaused) return;
@@ -485,7 +510,7 @@ export default function useGame() {
     }
   }
 
-  function endGame(reason = 'time') {
+  function endGame(reason: string = 'time') {
     setGameOver(true);
     setIsPaused(true);
     playSound('gameover');
