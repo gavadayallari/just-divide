@@ -1,0 +1,21 @@
+{
+  "gameName": "just-divide",
+  "gameDuration": 600,
+  "levelCheckpoints": [
+    { "time": 180, "minScore": 150, "minLevel": 2 },
+    { "time": 300, "minScore": 300, "minLevel": 3 },
+    { "time": 420, "minScore": 450, "minLevel": 4 },
+    { "time": 480, "minScore": 550, "minLevel": 5 },
+    { "time": 540, "minScore": 650, "minLevel": 6 },
+    { "time": 600, "minScore": 750, "minLevel": 7 }
+  ],
+  "scoreLevels": [
+    { "minScore": 150, "level": 2 },
+    { "minScore": 300, "level": 3 },
+    { "minScore": 450, "level": 4 },
+    { "minScore": 550, "level": 5 },
+    { "minScore": 650, "level": 6 },
+    { "minScore": 750, "level": 7 }
+  ]
+}
+

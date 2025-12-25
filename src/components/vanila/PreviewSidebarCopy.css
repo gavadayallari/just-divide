@@ -1,0 +1,160 @@
+/* PreviewSidebarCopy.css - Vanilla CSS converted from Tailwind */
+
+.sidebar-container {
+  position: fixed;
+  width: fit-content;
+  padding: 0.5rem; /* 8px */
+  top: 0;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  align-items: flex-start;
+  z-index: 10;
+  transition: all 300ms ease;
+}
+
+.sidebar-container.paused {
+  background-color: #8b5cf6; /* violet-500 */
+}
+
+.sidebar-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem; /* 24px */
+}
+
+/* Base button styles */
+.sidebar-btn {
+  width: 2.5rem; /* 40px */
+  height: 2.5rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 200ms ease;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  touch-action: none;
+  border: none;
+  cursor: pointer;
+}
+
+.sidebar-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Play/Pause button */
+.sidebar-btn.play-pause {
+  background-color: #8b5cf6; /* violet-500 */
+}
+
+.sidebar-btn.play-pause:hover:not(:disabled) {
+  background-color: #7c3aed; /* violet-600 */
+}
+
+/* Mute button - unmuted state (green) */
+.sidebar-btn.mute.unmuted {
+  background-color: #22c55e; /* green-500 */
+}
+
+.sidebar-btn.mute.unmuted:hover {
+  background-color: #16a34a; /* green-600 */
+}
+
+/* Mute button - muted state (red) */
+.sidebar-btn.mute.muted {
+  background-color: #ef4444; /* red-500 */
+}
+
+.sidebar-btn.mute.muted:hover {
+  background-color: #dc2626; /* red-600 */
+}
+
+/* Reset button */
+.sidebar-btn.reset {
+  background-color: #eab308; /* yellow-500 */
+}
+
+.sidebar-btn.reset:hover {
+  background-color: #ca8a04; /* yellow-600 */
+}
+
+/* Help button */
+.sidebar-btn.help-btn {
+  background-color: #22c55e; /* green-500 */
+}
+
+.sidebar-btn.help-btn:hover {
+  background-color: #16a34a; /* green-600 */
+}
+
+.sidebar-btn.hidden {
+  display: none;
+}
+
+/* Icon styles */
+.sidebar-icon {
+  width: 1.75rem; /* 28px - size-7 */
+  height: 1.75rem;
+  color: white;
+}
+
+.sidebar-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.sidebar-icon-wrapper svg {
+  width: 100%;
+  height: 100%;
+  color: white;
+}
+
+/* Responsive styles - Medium screens (768px+) */
+@media (min-width: 768px) {
+  .sidebar-container {
+    padding: 0.75rem; /* 12px */
+  }
+
+  .sidebar-btn {
+    width: 3rem; /* 48px */
+    height: 3rem;
+  }
+
+  .sidebar-icon {
+    width: 2rem; /* 32px - size-8 */
+    height: 2rem;
+  }
+
+  .sidebar-icon-wrapper svg {
+    width: 70%;
+    height: 70%;
+  }
+}
+
+/* Responsive styles - Large screens (1024px+) */
+@media (min-width: 1024px) {
+  .sidebar-container {
+    padding: 1rem; /* 16px */
+  }
+
+  .sidebar-btn {
+    width: 4rem; /* 64px */
+    height: 4rem;
+  }
+
+  .sidebar-icon {
+    width: 2.5rem; /* 40px - size-10 */
+    height: 2.5rem;
+  }
+
+  .sidebar-icon-wrapper svg {
+    width: 75%;
+    height: 75%;
+  }
+}
