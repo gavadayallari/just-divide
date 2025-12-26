@@ -1379,7 +1379,15 @@ body::before {
 /* =====================================================
    PORTRAIT MODE LOCK (Mobile/Tablet)
    ===================================================== */
-@media screen and (orientation: portrait) and (max-width: 900px) {
+
+/* Default to hidden to prevent unstyled rendering on unsupported sizes */
+.rotate-overlay {
+  display: none;
+}
+
+/* PORTRAIT MODE LOCK (Mobile/Tablet) */
+/* Increased max-width to 1368px to cover iPad Pro 12.9" and Surface Pro 7 in portrait */
+@media screen and (orientation: portrait) and (max-width: 1368px) {
 
   /* Lock the game interaction */
   .game-wrapper {
@@ -1484,16 +1492,17 @@ body::before {
   }
 
   .game-stage-bg.stage {
-    width: 100% !important;
-    height: 100% !important;
+    width: 100vw !important;
+    height: 100vh !important;
     max-width: none !important;
     padding: 0 !important;
-    margin: 5px !important;
-    /* RESET MARGINS */
+    margin: 0 !important;
+    /* Fixed: Remove margin to prevent bottom shift/overflow */
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    justify-content: flex-start !important;
+    justify-content: center !important;
+    /* Fixed: Center vertically */
   }
 
   /* --- TOP HEADER (Title + Timer) --- */
@@ -1551,8 +1560,8 @@ body::before {
     align-items: center !important;
     justify-content: space-between !important;
     position: relative !important;
-    margin-top: 15px !important;
-    /* Space for header */
+    margin-top: -75px !important;
+    /* Reduced gap between timer and stage */
   }
 
   /* --- COLUMN 1: LEFT INSTRUCTIONS --- */
@@ -1562,7 +1571,7 @@ body::before {
     /* Absolute left for stability */
     left: 5rem !important;
     /* Moved right to clear the sidebar (approx 4rem width) */
-    top: 70% !important;
+    top: 50% !important;
     transform: translateY(-50%) !important;
     width: 22% !important;
     /* Slightly reduced width to fit */
@@ -1599,8 +1608,8 @@ body::before {
     /* Ensure it leaves room for sides */
     margin: 0 auto !important;
     /* Center horizontally */
-    transform: translateY(10px) !important;
-    /* Slight adjustments for visual center */
+    transform: none !important;
+    /* Removed downward shift */
   }
 
   /* Dynamic scaling for center content */
@@ -1679,7 +1688,7 @@ body::before {
   .right-panel {
     position: absolute !important;
     right: 10% !important;
-    top: 70% !important;
+    top: 60% !important;
     transform: translateY(-50%) !important;
     width: auto !important;
     height: auto !important;
@@ -1812,10 +1821,7 @@ body::before {
     z-index: 100 !important;
   } */
 
-  /* Hide fullscreen button in landscape mobile to reduce clutter */
-  .fullscreen-btn-right {
-    display: none !important;
-  }
+
 
   /* Original header buttons hidden */
   .header .pause,
